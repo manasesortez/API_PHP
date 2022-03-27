@@ -1,7 +1,10 @@
 <?php
+
+global $idConexion;
+
 function conectar(){
     //credenciales de xampp
-    $server = "localhost";
+    $server = "127.0.0.1";
     $username = "root";
     $password = "";
     $bd = "miagenda";
@@ -9,7 +12,7 @@ function conectar(){
     try{
         $idConexion = mysqli_connect($server, $username, $password, $bd);
     }catch(Exception $e){
-        $idConexion = $e . " " . mysqli_error($idConexion);
+        mysqli_error($idConexion);
     }
     return $idConexion;
 
@@ -61,4 +64,31 @@ function listarContacto($filtro){
     desconectar($idConexion);
     return array_values($datosFila);
 }
+
+function modificarContacto($id_contacto, $nombre,$telefono){
+    $idConexion = conectar();
+    $sql = "UPDATE contactos SET nombre='$nombre', telefono='$telefono' WHERE id_contacto = '$id_contacto";
+    if(mysqli_query($idConexion, $sql)){
+        $estado = 1;
+    }else{
+        $estado ="Error: " . mysqli_error($idConexion);
+    }
+    desconectar($idConexion);
+    return $estado;
+}
+
+function eliminarContacto($id_contacto){
+    $idConexion = conectar();
+    $sql = "DELETE FROM contactos WHERE id_contacto = '$id_contacto'";
+    if(mysqli_query($idConexion, $sql)){
+        $estado = 1;
+    }else{
+        $estado ="Error: " . mysqli_error($idConexion);
+    }
+    desconectar($idConexion);
+    return $estado;
+}
+
+
+
 ?>
